@@ -11,7 +11,7 @@ export interface ArtStyle {
 }
 
 const NO_SWATCH =
-  "This is a pure painting on canvas with no text, no labels, no color swatches, no palette strips, no charts, and no annotations of any kind.";
+  "IMPORTANT: Generate ONLY the painting itself filling the entire image edge to edge. NEVER include a picture frame, wall, easel, color palette, color swatches, paint tubes, art supplies, labels, text, annotations, or any element outside the painting. The painting IS the image — no border, no frame, no meta-elements.";
 
 export const artStyles: ArtStyle[] = [
   {
@@ -117,8 +117,8 @@ export function buildFinalPrompt(
   const style = getStyleById(styleId);
 
   if (!style?.promptTemplate) {
-    // Free style
-    return `${adaptedSubject}. oil painting, highly detailed, fine art, museum quality. ${NO_SWATCH}`;
+    // Free style — avoid "museum quality" / "fine art" which trigger framed painting renders
+    return `A beautiful oil painting of ${adaptedSubject}, painted directly on canvas with rich expressive brushwork and vivid colors. The scene fills the entire canvas edge to edge. ${NO_SWATCH}`;
   }
 
   const template =
