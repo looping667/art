@@ -1,0 +1,87 @@
+{
+  "metadata": {
+    "title": "Atelier Toile — AI-Powered Custom Paintings",
+    "description": "Describe your dream painting. A real artist paints it for you, by hand."
+  },
+  "header": {
+    "brand": "Atelier Toile",
+    "create": "Create my painting",
+    "howItWorks": "How it works"
+  },
+  "hero": {
+    "title": "Describe your painting.",
+    "titleHighlight": "An artist brings it to life.",
+    "subtitle": "Describe the scene of your dreams, choose an artistic style, and receive a unique hand-painted artwork by a partner artist.",
+    "cta": "Create my painting"
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "step1Title": "Describe your vision",
+    "step1Desc": "Tell us about the scene, colors, and atmosphere of your dream painting.",
+    "step2Title": "Preview the result",
+    "step2Desc": "Our AI generates a preview of your painting in the chosen style.",
+    "step3Title": "Receive your artwork",
+    "step3Desc": "A partner artist hand-paints your painting on canvas."
+  },
+  "gallery": {
+    "title": "Inspirations",
+    "subtitle": "Discover examples of paintings created for our clients."
+  },
+  "footer": {
+    "tagline": "Custom art, just a few words away.",
+    "copyright": "© {year} Atelier Toile. All rights reserved."
+  },
+  "create": {
+    "stepDescription": "Description",
+    "stepStyle": "Style",
+    "stepGenerate": "Generate",
+    "stepOrder": "Order",
+    "descTitle": "Describe your ideal painting",
+    "descPlaceholder": "Describe the scene, colors, atmosphere you imagine...\n\nExample: A Norman harbor at sunset, with colorful boats and golden reflections on the water.",
+    "descExamples": "Inspiration examples",
+    "descExample1": "A Norman harbor at sunset",
+    "descExample2": "A blooming garden in spring with a small bridge",
+    "descExample3": "A cobblestone alley in Montmartre in the rain",
+    "descExample4": "A lavender landscape in Provence",
+    "continue": "Continue",
+    "back": "Back",
+    "styleTitle": "Choose an artistic style",
+    "styleBoudin": "In the style of Boudin",
+    "styleBoudinDesc": "Seascapes, luminous skies, impressionism",
+    "styleMonet": "In the style of Monet",
+    "styleMonetDesc": "Impressionism, color touches, gardens, water",
+    "styleBoucher": "In the style of Boucher",
+    "styleBoucherDesc": "French baroque, pastoral scenes, golden tones",
+    "styleHopper": "In the style of Hopper",
+    "styleHopperDesc": "American realism, raking light, solitude",
+    "styleRembrandt": "In the style of Rembrandt",
+    "styleRembrandtDesc": "Chiaroscuro, portraits, classical realism",
+    "styleFree": "Free style",
+    "styleFreeDesc": "No imposed reference, total freedom",
+    "generateTitle": "Your painting takes shape",
+    "generateBtn": "Generate my painting",
+    "regenerateBtn": "Regenerate",
+    "attemptsLeft": "{count} attempt(s) remaining",
+    "wantThis": "I want this painting",
+    "generating": "Creating...",
+    "generateError": "An error occurred. Please try again.",
+    "orderTitle": "Order your painting",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone",
+    "format": "Size",
+    "format40x50": "40 × 50 cm",
+    "format60x80": "60 × 80 cm",
+    "format100x120": "100 × 120 cm",
+    "messageArtist": "Message for the artist (optional)",
+    "messagePlaceholder": "Any details, special requests...",
+    "submitOrder": "Submit my order",
+    "submitting": "Submitting...",
+    "confirmTitle": "Order submitted!",
+    "confirmMessage": "Thank you for your order. You will receive a confirmation email at {email}. Our team will contact you within 48 hours to finalize the details.",
+    "backToHome": "Back to home",
+    "required": "This field is required",
+    "invalidEmail": "Invalid email"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "metadata": {
+    "title": "Atelier Toile — Peintures personnalisées par IA",
+    "description": "Décrivez votre peinture de rêve. Un artiste la réalise pour vous, à la main."
+  },
+  "header": {
+    "brand": "Atelier Toile",
+    "create": "Créer ma peinture",
+    "howItWorks": "Comment ça marche"
+  },
+  "hero": {
+    "title": "Décrivez votre peinture.",
+    "titleHighlight": "Un artiste la réalise pour vous.",
+    "subtitle": "Décrivez la scène de vos rêves, choisissez un style artistique, et recevez une peinture unique réalisée à la main par un artiste partenaire.",
+    "cta": "Créer ma peinture"
+  },
+  "howItWorks": {
+    "title": "Comment ça marche",
+    "step1Title": "Décrivez votre vision",
+    "step1Desc": "Racontez-nous la scène, les couleurs, l'ambiance de la peinture de vos rêves.",
+    "step2Title": "Visualisez le résultat",
+    "step2Desc": "Notre IA génère un aperçu de votre peinture selon le style choisi.",
+    "step3Title": "Recevez votre œuvre",
+    "step3Desc": "Un artiste partenaire réalise votre peinture à la main, sur toile."
+  },
+  "gallery": {
+    "title": "Inspirations",
+    "subtitle": "Découvrez des exemples de peintures réalisées pour nos clients."
+  },
+  "footer": {
+    "tagline": "L'art sur mesure, à portée de mots.",
+    "copyright": "© {year} Atelier Toile. Tous droits réservés."
+  },
+  "create": {
+    "stepDescription": "Description",
+    "stepStyle": "Style",
+    "stepGenerate": "Génération",
+    "stepOrder": "Commande",
+    "descTitle": "Décrivez votre peinture idéale",
+    "descPlaceholder": "Décrivez la scène, les couleurs, l'ambiance que vous imaginez...\n\nExemple : Un port normand au coucher du soleil, avec des bateaux colorés et des reflets dorés sur l'eau.",
+    "descExamples": "Exemples d'inspiration",
+    "descExample1": "Un port normand au coucher du soleil",
+    "descExample2": "Un jardin fleuri au printemps avec un petit pont",
+    "descExample3": "Une ruelle pavée de Montmartre sous la pluie",
+    "descExample4": "Un paysage de lavande en Provence",
+    "continue": "Continuer",
+    "back": "Retour",
+    "styleTitle": "Choisissez un style artistique",
+    "styleBoudin": "À la manière de Boudin",
+    "styleBoudinDesc": "Paysages marins, ciel lumineux, impressionnisme",
+    "styleMonet": "À la manière de Monet",
+    "styleMonetDesc": "Impressionnisme, touches de couleur, jardins, eau",
+    "styleBoucher": "À la manière de Boucher",
+    "styleBoucherDesc": "Baroque français, scènes pastorales, tons dorés",
+    "styleHopper": "À la manière de Hopper",
+    "styleHopperDesc": "Réalisme américain, lumière rasante, solitude",
+    "styleRembrandt": "À la manière de Rembrandt",
+    "styleRembrandtDesc": "Clair-obscur, portraits, réalisme classique",
+    "styleFree": "Style libre",
+    "styleFreeDesc": "Pas de référence imposée, liberté totale",
+    "generateTitle": "Votre peinture prend forme",
+    "generateBtn": "Générer ma peinture",
+    "regenerateBtn": "Regénérer",
+    "attemptsLeft": "{count} essai(s) restant(s)",
+    "wantThis": "Je veux cette peinture",
+    "generating": "Création en cours...",
+    "generateError": "Une erreur est survenue. Veuillez réessayer.",
+    "orderTitle": "Commandez votre peinture",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "Email",
+    "phone": "Téléphone",
+    "format": "Format",
+    "format40x50": "40 × 50 cm",
+    "format60x80": "60 × 80 cm",
+    "format100x120": "100 × 120 cm",
+    "messageArtist": "Message pour l'artiste (optionnel)",
+    "messagePlaceholder": "Des précisions, des souhaits particuliers...",
+    "submitOrder": "Envoyer ma commande",
+    "submitting": "Envoi en cours...",
+    "confirmTitle": "Commande envoyée !",
+    "confirmMessage": "Merci pour votre commande. Vous recevrez un email de confirmation à {email}. Notre équipe vous contactera sous 48h pour finaliser les détails.",
+    "backToHome": "Retour à l'accueil",
+    "required": "Ce champ est requis",
+    "invalidEmail": "Email invalide"
+  }
+}
