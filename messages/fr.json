@@ -13,6 +13,9 @@
     "titleHighlight": "Un artiste la réalise pour vous.",
 
     "cta": "Générer ma peinture",
+    "createTitle": "À votre tour.",
+    "createTitleHighlight": "Créez la vôtre.",
+    "createSubtitle": "Décrivez votre vision, choisissez un style, et voyez votre peinture prendre vie.",
     "promptPlaceholder": "Décrivez le tableau de vos rêves... Ex : un port normand au coucher du soleil, un portrait à la Rembrandt, un jardin fleuri impressionniste...",
     "tryExamples": "Essayez :",
     "chooseStyle": "Choisissez un style"

@@ -18,32 +18,25 @@ export default function PaintingMarquee() {
   const items = [...paintings, ...paintings];
 
   return (
-    <section className="py-12 sm:py-16 overflow-hidden bg-beige/20">
-      <h2 className="font-serif text-2xl sm:text-3xl font-bold text-brown text-center mb-2">
-        {t("title")}
-      </h2>
-      <p className="text-brown/60 text-center mb-8 text-sm sm:text-base">
-        {t("subtitle")}
-      </p>
-
+    <section className="py-4 sm:py-6 overflow-hidden">
       <div
-        className="flex gap-6 sm:gap-8 hover:[animation-play-state:paused] w-max"
+        className="flex gap-5 sm:gap-7 hover:[animation-play-state:paused] w-max"
         style={{
-          animation: "marquee 40s linear infinite",
+          animation: "marquee 30s linear infinite",
         }}
       >
         {items.map((painting, i) => (
-          <div key={i} className="flex-shrink-0 w-48 sm:w-64">
-            <div className="bg-black p-2 sm:p-3 rounded-sm shadow-xl">
+          <div key={i} className="flex-shrink-0 w-56 sm:w-72 lg:w-80">
+            <div className="bg-brown/90 p-2 sm:p-2.5 rounded-lg shadow-2xl">
               <Image
                 src={painting.src}
                 alt={t(painting.labelKey)}
-                width={400}
-                height={400}
-                className="w-full aspect-square object-cover"
+                width={600}
+                height={750}
+                className="w-full aspect-[4/5] object-cover rounded-sm"
               />
             </div>
-            <p className="text-center mt-3 text-xs sm:text-sm text-brown/60 italic">
+            <p className="text-center mt-2.5 text-xs sm:text-sm text-brown/50 italic">
               {t(painting.labelKey)}
             </p>
           </div>

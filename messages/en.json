@@ -13,6 +13,9 @@
     "titleHighlight": "An artist brings it to life.",
 
     "cta": "Generate my painting",
+    "createTitle": "Your turn.",
+    "createTitleHighlight": "Create yours.",
+    "createSubtitle": "Describe your vision, choose a style, and watch your painting come to life.",
     "promptPlaceholder": "Describe your dream painting... E.g.: a Norman harbor at sunset, a Rembrandt-style portrait, an impressionist flower garden...",
     "tryExamples": "Try:",
     "chooseStyle": "Choose a style"

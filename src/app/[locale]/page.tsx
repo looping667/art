@@ -10,15 +10,14 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col">
-      {/* Hero Section with inline creation form */}
-      <section className="relative py-16 sm:py-24 px-4 sm:px-6">
+      {/* Hero — compact, title only */}
+      <section className="relative pt-10 pb-4 sm:pt-16 sm:pb-6 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold text-brown leading-tight mb-4">
+          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold text-brown leading-tight">
             {t("hero.title")}
             <br />
             <span className="text-terracotta">{t("hero.titleHighlight")}</span>
           </h1>
-          <HeroCreateForm />
         </div>
 
         {/* Decorative elements */}
@@ -26,8 +25,23 @@ export default function HomePage() {
         <div className="absolute bottom-10 right-10 w-32 h-32 bg-terracotta/10 rounded-full blur-3xl" />
       </section>
 
-      {/* Scrolling painting banner */}
+      {/* Scrolling painting banner — immediately visible, big, impactful */}
       <PaintingMarquee />
+
+      {/* Create your own — form section */}
+      <section className="py-12 sm:py-16 px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-brown mb-2">
+            {t("hero.createTitle")}
+            {" "}
+            <span className="text-terracotta">{t("hero.createTitleHighlight")}</span>
+          </h2>
+          <p className="text-brown/50 mb-8 text-sm sm:text-base">
+            {t("hero.createSubtitle")}
+          </p>
+          <HeroCreateForm />
+        </div>
+      </section>
 
       {/* How it Works */}
       <section id="how-it-works" className="py-16 sm:py-24 px-4 sm:px-6 bg-beige/30">
