@@ -1,9 +1,12 @@
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
+import Link from "next/link";
 import HeroCreateForm from "@/components/HeroCreateForm";
 import PaintingMarquee from "@/components/PaintingMarquee";
 
 export default function HomePage() {
   const t = useTranslations();
+  const locale = useLocale();
 
   return (
     <div className="flex flex-col">
@@ -98,16 +101,12 @@ export default function HomePage() {
             <span className="text-gold">{t("hero.titleHighlight")}</span>
           </h2>
           <p className="text-white/70 mb-8">{t("hero.subtitle")}</p>
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
+          <Link
+            href={`/${locale}/create`}
             className="inline-flex items-center gap-2 bg-terracotta text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-terracotta-dark transition-all hover:shadow-lg"
           >
             {t("hero.cta")}
-          </a>
+          </Link>
         </div>
       </section>
     </div>
