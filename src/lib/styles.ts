@@ -98,14 +98,14 @@ export function getStyleById(styleId: string): ArtStyle | undefined {
   return artStyles.find((s) => s.id === styleId);
 }
 
-export function getImageSize(
+export function getAspectRatio(
   styleId: string,
   orientationOverride?: "landscape" | "portrait"
-): "1792x1024" | "1024x1792" {
+): string {
   const style = getStyleById(styleId);
   const orientation =
     orientationOverride ?? style?.defaultOrientation ?? "landscape";
-  return orientation === "portrait" ? "1024x1792" : "1792x1024";
+  return orientation === "portrait" ? "9:16" : "16:9";
 }
 
 export interface SubjectAnalysis {

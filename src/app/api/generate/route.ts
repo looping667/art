@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
+import { GoogleGenAI } from "@google/genai";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import {
   getStyleById,
-  getImageSize,
+  getAspectRatio,
   buildFinalPrompt,
   type SubjectAnalysis,
 } from "@/lib/styles";
 import { v4 as uuidv4 } from "uuid";
 
 async function analyzeAndAdaptSubject(
-  openai: OpenAI,
+  ai: GoogleGenAI,
   userSubject: string,
   styleId: string
 ): Promise<SubjectAnalysis> {
@@ -27,12 +27,7 @@ You MUST adapt the subject to this painter's universe and artistic world.${style
 - If no artist or movement is mentioned, choose a painterly style that best suits the subject described.
 IMPORTANT: If the detected artist is still living (born after 1930 with no known death date), do NOT use their name in adapted_subject or anchor_paintings. Describe their style by movement and period without naming them.`;
 
-  const response = await openai.chat.completions.create({
-    model: "gpt-4o",
-    messages: [
-      {
-        role: "system",
-        content: `You are a world-renowned art director and art historian. Your mission is to transform ANY user input — even a single word — into a master-level painting prompt.
+  const systemPrompt = `You are a world-renowned art director and art historian. Your mission is to transform ANY user input — even a single word — into a master-level painting prompt.
 
 ${styleContextBlock}
 
@@ -59,16 +54,20 @@ Respond in JSON only:
   "has_figures": true or false,
   "orientation": "landscape" or "portrait",
   "detected_artist": "Artist Name or null"
-}`,
-      },
-      { role: "user", content: userSubject },
-    ],
-    temperature: 0.7,
-    max_tokens: 600,
-    response_format: { type: "json_object" },
+}`;
+
+  const response = await ai.models.generateContent({
+    model: "gemini-3-pro-image-preview",
+    contents: userSubject,
+    config: {
+      systemInstruction: systemPrompt,
+      responseMimeType: "application/json",
+      temperature: 0.7,
+      maxOutputTokens: 600,
+    },
   });
 
-  const content = response.choices[0]?.message?.content;
+  const content = response.text;
   const fallbackOrientation = style?.defaultOrientation ?? "landscape";
 
   if (!content) {
@@ -101,10 +100,6 @@ Respond in JSON only:
   };
 }
 
-// Prefix that reduces DALL-E 3's tendency to rewrite and dilute the prompt
-const DALLE_PREFIX =
-  "I NEED to test how the tool works with extremely specific prompts. DO NOT add any detail, just use it AS-IS:\n\n";
-
 export async function POST(req: NextRequest) {
   try {
     const { prompt, style, sessionId } = await req.json();
@@ -116,46 +111,52 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-    // Step 1: Translate + adapt subject to painter's universe + get anchor paintings
-    const analysis = await analyzeAndAdaptSubject(openai, prompt, style);
+    // Step 1: Enrich the subject with Gemini (art direction + adaptation)
+    const analysis = await analyzeAndAdaptSubject(ai, prompt, style);
 
     // Step 2: Build the final prompt with narrative template + painting anchors
     const enrichedPrompt = buildFinalPrompt(analysis, style);
 
-    // Step 3: Determine image size (style default + subject override)
-    const imageSize = getImageSize(style, analysis.orientation);
+    // Step 3: Determine aspect ratio (style default + subject override)
+    const aspectRatio = getAspectRatio(style, analysis.orientation);
 
-    // Step 4: Generate image with DALL-E 3 (with anti-rewrite prefix)
-    const response = await openai.images.generate({
-      model: "dall-e-3",
-      prompt: DALLE_PREFIX + enrichedPrompt,
-      n: 1,
-      size: imageSize,
-      quality: "hd",
-      style: "natural",
+    // Step 4: Generate image with Gemini
+    const imageResponse = await ai.models.generateContent({
+      model: "gemini-3-pro-image-preview",
+      contents: enrichedPrompt,
+      config: {
+        responseModalities: ["IMAGE"],
+        imageConfig: {
+          aspectRatio: aspectRatio,
+          imageSize: "2K",
+        },
+      },
     });
 
-    const dalleUrl = response.data?.[0]?.url;
-    const revisedPrompt = response.data?.[0]?.revised_prompt ?? null;
+    const parts = imageResponse.candidates?.[0]?.content?.parts ?? [];
+    const imagePart = parts.find(
+      (p: { inlineData?: unknown }) => p.inlineData
+    ) as { inlineData: { data: string; mimeType: string } } | undefined;
 
-    if (!dalleUrl) {
+    if (!imagePart?.inlineData) {
       return NextResponse.json(
         { error: "No image generated" },
         { status: 500 }
       );
     }
 
-    // Download the image and upload to Supabase Storage
-    const imageResponse = await fetch(dalleUrl);
-    const imageBuffer = await imageResponse.arrayBuffer();
-    const fileName = `${uuidv4()}.png`;
+    // Upload base64 image directly to Supabase Storage
+    const imageBuffer = Buffer.from(imagePart.inlineData.data, "base64");
+    const mimeType = imagePart.inlineData.mimeType ?? "image/png";
+    const ext = mimeType.includes("webp") ? "webp" : "png";
+    const fileName = `${uuidv4()}.${ext}`;
 
     const { error: uploadError } = await getSupabaseAdmin()
       .storage.from("paintings")
       .upload(fileName, imageBuffer, {
-        contentType: "image/png",
+        contentType: mimeType,
         upsert: false,
       });
 
@@ -171,7 +172,7 @@ export async function POST(req: NextRequest) {
       data: { publicUrl },
     } = getSupabaseAdmin().storage.from("paintings").getPublicUrl(fileName);
 
-    // Save generation to database (including revised_prompt for debugging)
+    // Save generation to database
     const { data: generation, error: dbError } = await getSupabaseAdmin()
       .from("generations")
       .insert({
@@ -179,7 +180,7 @@ export async function POST(req: NextRequest) {
         prompt_original: prompt,
         style_choisi: style,
         prompt_enrichi: enrichedPrompt,
-        revised_prompt: revisedPrompt,
+        revised_prompt: null,
         image_url: publicUrl,
       })
       .select("id")
