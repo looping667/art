@@ -12,7 +12,8 @@
     "title": "Describe your painting.",
     "titleHighlight": "An artist brings it to life.",
     "subtitle": "Describe the scene of your dreams, choose an artistic style, and receive a unique hand-painted artwork by a partner artist.",
-    "cta": "Create my painting"
+    "cta": "Generate my painting",
+    "promptPlaceholder": "Describe your dream painting... E.g.: a Norman harbor at sunset, a Rembrandt-style portrait, an impressionist flower garden..."
   },
   "howItWorks": {
     "title": "How it works",
@@ -24,16 +25,20 @@
     "step3Desc": "A partner artist hand-paints your painting on canvas."
   },
   "gallery": {
-    "title": "Inspirations",
-    "subtitle": "Discover examples of paintings created for our clients."
+    "title": "Already painted for our clients",
+    "subtitle": "Each painting is unique, hand-painted by our partner artists.",
+    "painting1": "Contemporary portrait — Marie L., Paris",
+    "painting2": "Iris bouquet — Jean-Pierre D., Lyon",
+    "painting3": "Venetian canal — Sophie M., Bordeaux",
+    "painting4": "Still life with lemons — Camille R., Nantes",
+    "painting5": "Revisited baroque portrait — Thomas B., Marseille"
   },
   "footer": {
     "tagline": "Custom art, just a few words away.",
     "copyright": "© {year} Atelier Toile. All rights reserved."
   },
   "create": {
-    "stepDescription": "Description",
-    "stepStyle": "Style",
+    "stepDescriptionAndStyle": "Description & Style",
     "stepGenerate": "Generate",
     "stepOrder": "Order",
     "descTitle": "Describe your ideal painting",

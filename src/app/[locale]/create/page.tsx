@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,11 +11,12 @@ import StyleCard from "@/components/StyleCard";
 import OrderForm from "@/components/OrderForm";
 import { artStyles } from "@/lib/styles";
 
-type Step = 0 | 1 | 2 | 3 | 4;
+type Step = 0 | 1 | 2 | 3;
 
 export default function CreatePage() {
   const t = useTranslations("create");
   const locale = useLocale();
+  const searchParams = useSearchParams();
   const [step, setStep] = useState<Step>(0);
   const [description, setDescription] = useState("");
   const [selectedStyle, setSelectedStyle] = useState("");
@@ -25,6 +27,7 @@ export default function CreatePage() {
   const [error, setError] = useState("");
   const [sessionId, setSessionId] = useState("");
   const [confirmEmail, setConfirmEmail] = useState("");
+  const [autoGenerate, setAutoGenerate] = useState(false);
 
   useEffect(() => {
     const stored = sessionStorage.getItem("art-session-id");
@@ -37,9 +40,29 @@ export default function CreatePage() {
     }
   }, []);
 
+  // Read query params from hero form
+  useEffect(() => {
+    const prompt = searchParams.get("prompt");
+    const style = searchParams.get("style");
+    if (prompt) {
+      setDescription(prompt);
+      if (style) setSelectedStyle(style);
+      setStep(1);
+      setAutoGenerate(true);
+    }
+  }, [searchParams]);
+
+  // Auto-generate when coming from hero form
+  useEffect(() => {
+    if (autoGenerate && sessionId && description && selectedStyle) {
+      setAutoGenerate(false);
+      handleGenerate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoGenerate, sessionId]);
+
   const steps = [
-    t("stepDescription"),
-    t("stepStyle"),
+    t("stepDescriptionAndStyle"),
     t("stepGenerate"),
     t("stepOrder"),
   ];
@@ -77,8 +100,8 @@ export default function CreatePage() {
     }
   };
 
-  // Step 4: Confirmation screen
-  if (step === 4) {
+  // Step 3: Confirmation screen
+  if (step === 3) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center">
         <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-100 flex items-center justify-center">
@@ -119,7 +142,7 @@ export default function CreatePage() {
     <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12">
       <StepIndicator steps={steps} current={step} />
 
-      {/* Step 0: Description */}
+      {/* Step 0: Description + Style (merged) */}
       {step === 0 && (
         <div className="space-y-6">
           <h2 className="font-serif text-2xl sm:text-3xl font-bold text-brown text-center">
@@ -129,7 +152,7 @@ export default function CreatePage() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder={t("descPlaceholder")}
-            rows={6}
+            rows={5}
             className="w-full px-5 py-4 rounded-xl border-2 border-beige bg-white focus:outline-none focus:border-terracotta transition-colors text-brown placeholder-brown/30 resize-none"
           />
           <div>
@@ -146,10 +169,30 @@ export default function CreatePage() {
               ))}
             </div>
           </div>
+
+          {/* Style selection inline */}
+          <div>
+            <h3 className="font-serif text-xl font-semibold text-brown mb-4">
+              {t("styleTitle")}
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {artStyles.map((style) => (
+                <StyleCard
+                  key={style.id}
+                  name={t(style.nameKey)}
+                  description={t(style.descKey)}
+                  color={style.color}
+                  selected={selectedStyle === style.id}
+                  onClick={() => setSelectedStyle(style.id)}
+                />
+              ))}
+            </div>
+          </div>
+
           <div className="flex justify-end">
             <button
               onClick={() => setStep(1)}
-              disabled={!description.trim()}
+              disabled={!description.trim() || !selectedStyle}
               className="px-8 py-3 rounded-full bg-terracotta text-white font-medium hover:bg-terracotta-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {t("continue")}
@@ -158,44 +201,8 @@ export default function CreatePage() {
         </div>
       )}
 
-      {/* Step 1: Style Selection */}
+      {/* Step 1: Generate */}
       {step === 1 && (
-        <div className="space-y-6">
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-brown text-center">
-            {t("styleTitle")}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {artStyles.map((style) => (
-              <StyleCard
-                key={style.id}
-                name={t(style.nameKey)}
-                description={t(style.descKey)}
-                color={style.color}
-                selected={selectedStyle === style.id}
-                onClick={() => setSelectedStyle(style.id)}
-              />
-            ))}
-          </div>
-          <div className="flex justify-between">
-            <button
-              onClick={() => setStep(0)}
-              className="px-6 py-3 rounded-full border-2 border-beige text-brown hover:bg-beige/50 transition-colors font-medium"
-            >
-              {t("back")}
-            </button>
-            <button
-              onClick={() => setStep(2)}
-              disabled={!selectedStyle}
-              className="px-8 py-3 rounded-full bg-terracotta text-white font-medium hover:bg-terracotta-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              {t("continue")}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Step 2: Generate */}
-      {step === 2 && (
         <div className="space-y-6">
           <h2 className="font-serif text-2xl sm:text-3xl font-bold text-brown text-center">
             {t("generateTitle")}
@@ -252,7 +259,7 @@ export default function CreatePage() {
                   </button>
                 )}
                 <button
-                  onClick={() => setStep(3)}
+                  onClick={() => setStep(2)}
                   className="px-8 py-3 rounded-full bg-gold text-white font-medium hover:bg-gold-dark transition-colors"
                 >
                   {t("wantThis")}
@@ -263,7 +270,7 @@ export default function CreatePage() {
 
           <div className="flex justify-start">
             <button
-              onClick={() => setStep(1)}
+              onClick={() => setStep(0)}
               className="px-6 py-3 rounded-full border-2 border-beige text-brown hover:bg-beige/50 transition-colors font-medium"
             >
               {t("back")}
@@ -272,8 +279,8 @@ export default function CreatePage() {
         </div>
       )}
 
-      {/* Step 3: Order Form */}
-      {step === 3 && (
+      {/* Step 2: Order Form */}
+      {step === 2 && (
         <div className="space-y-6">
           <h2 className="font-serif text-2xl sm:text-3xl font-bold text-brown text-center">
             {t("orderTitle")}
@@ -294,10 +301,10 @@ export default function CreatePage() {
           <OrderForm
             generationId={generationId}
             imageUrl={imageUrl}
-            onBack={() => setStep(2)}
+            onBack={() => setStep(1)}
             onSuccess={(email) => {
               setConfirmEmail(email);
-              setStep(4);
+              setStep(3);
             }}
           />
         </div>

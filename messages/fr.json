@@ -12,7 +12,8 @@
     "title": "Décrivez votre peinture.",
     "titleHighlight": "Un artiste la réalise pour vous.",
     "subtitle": "Décrivez la scène de vos rêves, choisissez un style artistique, et recevez une peinture unique réalisée à la main par un artiste partenaire.",
-    "cta": "Créer ma peinture"
+    "cta": "Générer ma peinture",
+    "promptPlaceholder": "Décrivez le tableau de vos rêves... Ex : un port normand au coucher du soleil, un portrait à la Rembrandt, un jardin fleuri impressionniste..."
   },
   "howItWorks": {
     "title": "Comment ça marche",
@@ -24,16 +25,20 @@
     "step3Desc": "Un artiste partenaire réalise votre peinture à la main, sur toile."
   },
   "gallery": {
-    "title": "Inspirations",
-    "subtitle": "Découvrez des exemples de peintures réalisées pour nos clients."
+    "title": "Déjà réalisés pour nos clients",
+    "subtitle": "Chaque tableau est unique, peint à la main par nos artistes partenaires.",
+    "painting1": "Portrait contemporain — Marie L., Paris",
+    "painting2": "Bouquet d'iris — Jean-Pierre D., Lyon",
+    "painting3": "Canal vénitien — Sophie M., Bordeaux",
+    "painting4": "Nature morte aux citrons — Camille R., Nantes",
+    "painting5": "Portrait baroque revisité — Thomas B., Marseille"
   },
   "footer": {
     "tagline": "L'art sur mesure, à portée de mots.",
     "copyright": "© {year} Atelier Toile. Tous droits réservés."
   },
   "create": {
-    "stepDescription": "Description",
-    "stepStyle": "Style",
+    "stepDescriptionAndStyle": "Description & Style",
     "stepGenerate": "Génération",
     "stepOrder": "Commande",
     "descTitle": "Décrivez votre peinture idéale",
