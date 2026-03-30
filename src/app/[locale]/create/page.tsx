@@ -9,6 +9,7 @@ import Link from "next/link";
 import StepIndicator from "@/components/StepIndicator";
 import StyleCard from "@/components/StyleCard";
 import OrderForm from "@/components/OrderForm";
+import GenerationProgress from "@/components/GenerationProgress";
 import { artStyles } from "@/lib/styles";
 
 type Step = 0 | 1 | 2 | 3;
@@ -224,12 +225,7 @@ export default function CreatePage() {
             </div>
           )}
 
-          {loading && (
-            <div className="text-center py-16">
-              <div className="w-16 h-16 mx-auto mb-4 border-4 border-beige border-t-terracotta rounded-full animate-spin" />
-              <p className="text-brown/60 font-medium">{t("generating")}</p>
-            </div>
-          )}
+          {loading && <GenerationProgress />}
 
           {error && (
             <p className="text-red-500 text-center">{error}</p>
