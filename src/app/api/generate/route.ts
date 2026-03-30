@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { getSupabaseAdmin } from "@/lib/supabase";
-import { buildEnrichedPrompt } from "@/lib/styles";
+import { buildEnrichedPrompt, getImageSize } from "@/lib/styles";
 import { v4 as uuidv4 } from "uuid";
 
 export async function POST(req: NextRequest) {
@@ -16,6 +16,7 @@ export async function POST(req: NextRequest) {
     }
 
     const enrichedPrompt = buildEnrichedPrompt(prompt, style);
+    const imageSize = getImageSize(style);
 
     // Generate image with DALL-E 3
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -23,8 +24,9 @@ export async function POST(req: NextRequest) {
       model: "dall-e-3",
       prompt: enrichedPrompt,
       n: 1,
-      size: "1024x1024",
-      quality: "standard",
+      size: imageSize,
+      quality: "hd",
+      style: "natural",
     });
 
     const dalleUrl = response.data?.[0]?.url;
