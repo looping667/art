@@ -85,9 +85,10 @@ export async function POST(req: NextRequest) {
       generationId: generation.id,
     });
   } catch (error) {
-    console.error("Generate error:", error);
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("Generate error:", message);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: `Generation failed: ${message}` },
       { status: 500 }
     );
   }

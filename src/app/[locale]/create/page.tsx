@@ -89,13 +89,14 @@ export default function CreatePage() {
           sessionId,
         }),
       });
-      if (!res.ok) throw new Error("Generation failed");
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Generation failed");
       setImageUrl(data.imageUrl);
       setGenerationId(data.generationId);
       setAttemptsLeft((prev) => prev - 1);
-    } catch {
-      setError(t("generateError"));
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      setError(`${t("generateError")} (${msg})`);
     } finally {
       setLoading(false);
     }
