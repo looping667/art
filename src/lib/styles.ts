@@ -108,30 +108,62 @@ export function getImageSize(
   return orientation === "portrait" ? "1024x1792" : "1792x1024";
 }
 
+export interface SubjectAnalysis {
+  adapted_subject: string;
+  painting_technique: string;
+  color_palette: string;
+  lighting: string;
+  composition: string;
+  anchor_paintings: string[];
+  has_figures: boolean;
+  orientation: "landscape" | "portrait";
+  detected_artist: string | null;
+}
+
 export function buildFinalPrompt(
-  adaptedSubject: string,
-  styleId: string,
-  hasFigures: boolean,
-  anchorPaintings: string[]
+  analysis: SubjectAnalysis,
+  styleId: string
 ): string {
   const style = getStyleById(styleId);
 
   if (!style?.promptTemplate) {
-    // Free style — avoid "museum quality" / "fine art" which trigger framed painting renders
-    return `A beautiful oil painting of ${adaptedSubject}, painted directly on canvas with rich expressive brushwork and vivid colors. The scene fills the entire canvas edge to edge. ${NO_SWATCH}`;
+    // Free style — build a rich prompt from the enriched analysis fields
+    const parts = [
+      `An oil painting of ${analysis.adapted_subject}, painted directly on canvas filling the entire image edge to edge.`,
+    ];
+    if (analysis.painting_technique) {
+      parts.push(analysis.painting_technique);
+    }
+    if (analysis.color_palette) {
+      parts.push(`The palette is built from ${analysis.color_palette}.`);
+    }
+    if (analysis.lighting) {
+      parts.push(analysis.lighting);
+    }
+    if (analysis.composition) {
+      parts.push(analysis.composition);
+    }
+    if (analysis.anchor_paintings.length > 0) {
+      parts.push(
+        `Closely resembling the technique and atmosphere seen in ${analysis.anchor_paintings.join(" and ")}.`
+      );
+    }
+    parts.push(NO_SWATCH);
+    return parts.join(" ");
   }
 
+  // Named style — use the predefined narrative template
   const template =
-    !hasFigures && style.promptTemplateNoFigures
+    !analysis.has_figures && style.promptTemplateNoFigures
       ? style.promptTemplateNoFigures
       : style.promptTemplate;
 
   const anchorsText =
-    anchorPaintings.length > 0
-      ? anchorPaintings.join(" and ")
+    analysis.anchor_paintings.length > 0
+      ? analysis.anchor_paintings.join(" and ")
       : "this artist's most celebrated works";
 
   return template
-    .replace("[SUBJECT]", adaptedSubject)
+    .replace("[SUBJECT]", analysis.adapted_subject)
     .replace("[ANCHORS]", anchorsText);
 }

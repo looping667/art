@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { getSupabaseAdmin } from "@/lib/supabase";
-import { getStyleById, getImageSize, buildFinalPrompt } from "@/lib/styles";
+import {
+  getStyleById,
+  getImageSize,
+  buildFinalPrompt,
+  type SubjectAnalysis,
+} from "@/lib/styles";
 import { v4 as uuidv4 } from "uuid";
-
-interface SubjectAnalysis {
-  adapted_subject: string;
-  anchor_paintings: string[];
-  has_figures: boolean;
-  orientation: "landscape" | "portrait";
-}
 
 async function analyzeAndAdaptSubject(
   openai: OpenAI,
@@ -17,83 +15,89 @@ async function analyzeAndAdaptSubject(
   styleId: string
 ): Promise<SubjectAnalysis> {
   const style = getStyleById(styleId);
+  const isNamedStyle = style && styleId !== "free";
 
-  if (!style || styleId === "free") {
-    // For free style, just translate to English
-    const translation = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content:
-            "Translate the following text to English. Output only the translated text, nothing else. If the text is already in English, return it unchanged.",
-        },
-        { role: "user", content: userSubject },
-      ],
-      temperature: 0,
-      max_tokens: 200,
-    });
+  const styleContextBlock = isNamedStyle
+    ? `PREDEFINED STYLE: ${style.styleName}
+${style.styleContext}
+You MUST adapt the subject to this painter's universe and artistic world.${style.id === "hockney" ? "\nIMPORTANT: This is a living artist. Do NOT use the artist's name anywhere in your output. Describe by movement and period instead (e.g. \"1960s California Pop Art pool paintings\")." : ""}`
+    : `FREE STYLE: No predefined painter. Analyze the user's text carefully:
+- If they mention a specific artist or painter name, use your deep art history knowledge to describe that artist's style, technique, palette, and universe. Research the artist thoroughly.
+- If they mention an art movement (impressionism, cubism, etc.), describe that movement's visual characteristics.
+- If no artist or movement is mentioned, choose a painterly style that best suits the subject described.
+IMPORTANT: If the detected artist is still living (born after 1930 with no known death date), do NOT use their name in adapted_subject or anchor_paintings. Describe their style by movement and period without naming them.`;
 
-    return {
-      adapted_subject:
-        translation.choices[0]?.message?.content?.trim() ?? userSubject,
-      anchor_paintings: [],
-      has_figures: false,
-      orientation: "landscape",
-    };
-  }
-
-  // Use gpt-4o for better art direction
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: [
       {
         role: "system",
-        content: `You are an expert art historian and painting director. Your job is to take a user's painting subject and adapt it to fit naturally within a specific painter's universe.
+        content: `You are a world-renowned art director and art historian. Your mission is to transform ANY user input — even a single word — into a master-level painting prompt.
 
-Painter: ${style.styleName}
-Context: ${style.styleContext}
+${styleContextBlock}
 
-Instructions:
-1. Translate the user's subject to English if needed.
-2. Rewrite the subject as a vivid 2-3 sentence scene description that this painter would naturally have painted. Include specific compositional framing and time-of-day or lighting conditions this painter favored. Keep the user's core idea but transform it into something coherent with this painter's world.
-3. Name 2-3 actual famous paintings by this artist that are closest in subject matter or mood to what the user wants. These will be used as visual style anchors in the prompt.${style.id === "hockney" ? " IMPORTANT: Do NOT use the artist name — describe by movement and period instead (e.g. \"1960s California Pop Art pool paintings\")." : ""}
-4. Determine if the adapted scene contains human figures or people.
-5. Determine the best painting orientation (landscape or portrait) for this specific scene.
+YOUR TASKS:
+1. TRANSLATE: If the text is not in English, translate it to English.
+2. ENRICH THE SCENE: Transform the user's text into a vivid, detailed 2-3 sentence painting scene description. Add atmosphere, time of day, specific visual details, emotional mood. Even a minimal input like "a cat" must become a complete, painterly scene.
+3. PAINTING TECHNIQUE: Describe the brushwork, paint application, texture, medium, and surface finish in detail (e.g. "thick impasto highlights with thin transparent glazes in the shadows, visible canvas weave").
+4. COLOR PALETTE: Describe the palette using color names only — NEVER hex codes. Be specific (e.g. "warm cadmium yellow, deep ultramarine blue, burnt sienna" not just "warm colors").
+5. LIGHTING: Describe the quality, direction, temperature, and atmosphere of the light (e.g. "low-angle golden afternoon light from the left casting long violet shadows").
+6. COMPOSITION: Describe the framing, perspective, focal point placement, and spatial structure (e.g. "wide horizontal composition with a low horizon line, subject placed at the right third").
+7. ANCHOR PAINTINGS: Name 2-3 actual famous paintings that are closest in subject or mood — these serve as visual style references.
+8. FIGURES: Detect whether the scene contains human figures or people.
+9. ORIENTATION: Determine the best painting orientation (landscape or portrait) for this scene.
+10. ARTIST DETECTION: If the user mentioned a specific artist (in free style mode), identify them. Otherwise null.
 
 Respond in JSON only:
 {
   "adapted_subject": "2-3 sentence vivid scene description in English",
+  "painting_technique": "detailed brushwork and technique description",
+  "color_palette": "specific color names describing the palette",
+  "lighting": "detailed lighting description",
+  "composition": "framing and composition description",
   "anchor_paintings": ["Famous Painting Title 1", "Famous Painting Title 2"],
   "has_figures": true or false,
-  "orientation": "landscape" or "portrait"
+  "orientation": "landscape" or "portrait",
+  "detected_artist": "Artist Name or null"
 }`,
       },
       { role: "user", content: userSubject },
     ],
     temperature: 0.7,
-    max_tokens: 400,
+    max_tokens: 600,
     response_format: { type: "json_object" },
   });
 
   const content = response.choices[0]?.message?.content;
+  const fallbackOrientation = style?.defaultOrientation ?? "landscape";
+
   if (!content) {
     return {
       adapted_subject: userSubject,
+      painting_technique: "",
+      color_palette: "",
+      lighting: "",
+      composition: "",
       anchor_paintings: [],
       has_figures: false,
-      orientation: style.defaultOrientation,
+      orientation: fallbackOrientation,
+      detected_artist: null,
     };
   }
 
-  const parsed = JSON.parse(content) as SubjectAnalysis;
+  const parsed = JSON.parse(content);
   return {
     adapted_subject: parsed.adapted_subject || userSubject,
+    painting_technique: parsed.painting_technique || "",
+    color_palette: parsed.color_palette || "",
+    lighting: parsed.lighting || "",
+    composition: parsed.composition || "",
     anchor_paintings: Array.isArray(parsed.anchor_paintings)
       ? parsed.anchor_paintings
       : [],
     has_figures: Boolean(parsed.has_figures),
     orientation: parsed.orientation === "portrait" ? "portrait" : "landscape",
+    detected_artist: parsed.detected_artist || null,
   };
 }
 
@@ -118,12 +122,7 @@ export async function POST(req: NextRequest) {
     const analysis = await analyzeAndAdaptSubject(openai, prompt, style);
 
     // Step 2: Build the final prompt with narrative template + painting anchors
-    const enrichedPrompt = buildFinalPrompt(
-      analysis.adapted_subject,
-      style,
-      analysis.has_figures,
-      analysis.anchor_paintings
-    );
+    const enrichedPrompt = buildFinalPrompt(analysis, style);
 
     // Step 3: Determine image size (style default + subject override)
     const imageSize = getImageSize(style, analysis.orientation);
