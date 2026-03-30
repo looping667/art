@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 
 interface SubjectAnalysis {
   adapted_subject: string;
+  anchor_paintings: string[];
   has_figures: boolean;
   orientation: "landscape" | "portrait";
 }
@@ -36,40 +37,42 @@ async function analyzeAndAdaptSubject(
     return {
       adapted_subject:
         translation.choices[0]?.message?.content?.trim() ?? userSubject,
+      anchor_paintings: [],
       has_figures: false,
       orientation: "landscape",
     };
   }
 
-  // Combined call: translate + adapt to painter's universe + classify
+  // Use gpt-4o for better art direction
   const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: "gpt-4o",
     messages: [
       {
         role: "system",
-        content: `You are an art director specializing in classical painting. Your job is to take a user's painting subject and adapt it to fit naturally within a specific painter's universe.
+        content: `You are an expert art historian and painting director. Your job is to take a user's painting subject and adapt it to fit naturally within a specific painter's universe.
 
 Painter: ${style.styleName}
 Context: ${style.styleContext}
 
 Instructions:
-1. Translate the user's subject to English if needed
-2. Rewrite the subject so it fits naturally within this painter's world, themes, era, and iconography
-3. Keep the user's core idea but transform it into something the painter would actually have painted
-4. Determine if the adapted subject contains human figures/people
-5. Determine the best orientation (landscape or portrait) for this specific subject
+1. Translate the user's subject to English if needed.
+2. Rewrite the subject as a vivid 2-3 sentence scene description that this painter would naturally have painted. Include specific compositional framing and time-of-day or lighting conditions this painter favored. Keep the user's core idea but transform it into something coherent with this painter's world.
+3. Name 2-3 actual famous paintings by this artist that are closest in subject matter or mood to what the user wants. These will be used as visual style anchors in the prompt.${style.id === "hockney" ? " IMPORTANT: Do NOT use the artist name — describe by movement and period instead (e.g. \"1960s California Pop Art pool paintings\")." : ""}
+4. Determine if the adapted scene contains human figures or people.
+5. Determine the best painting orientation (landscape or portrait) for this specific scene.
 
-Respond in JSON format only:
+Respond in JSON only:
 {
-  "adapted_subject": "the rewritten subject in English, 1-2 sentences max",
-  "has_figures": true/false,
+  "adapted_subject": "2-3 sentence vivid scene description in English",
+  "anchor_paintings": ["Famous Painting Title 1", "Famous Painting Title 2"],
+  "has_figures": true or false,
   "orientation": "landscape" or "portrait"
 }`,
       },
       { role: "user", content: userSubject },
     ],
     temperature: 0.7,
-    max_tokens: 300,
+    max_tokens: 400,
     response_format: { type: "json_object" },
   });
 
@@ -77,6 +80,7 @@ Respond in JSON format only:
   if (!content) {
     return {
       adapted_subject: userSubject,
+      anchor_paintings: [],
       has_figures: false,
       orientation: style.defaultOrientation,
     };
@@ -85,10 +89,17 @@ Respond in JSON format only:
   const parsed = JSON.parse(content) as SubjectAnalysis;
   return {
     adapted_subject: parsed.adapted_subject || userSubject,
+    anchor_paintings: Array.isArray(parsed.anchor_paintings)
+      ? parsed.anchor_paintings
+      : [],
     has_figures: Boolean(parsed.has_figures),
     orientation: parsed.orientation === "portrait" ? "portrait" : "landscape",
   };
 }
+
+// Prefix that reduces DALL-E 3's tendency to rewrite and dilute the prompt
+const DALLE_PREFIX =
+  "I NEED to test how the tool works with extremely specific prompts. DO NOT add any detail, just use it AS-IS:\n\n";
 
 export async function POST(req: NextRequest) {
   try {
@@ -103,23 +114,24 @@ export async function POST(req: NextRequest) {
 
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    // Step 1: Translate + adapt subject to painter's universe + classify
+    // Step 1: Translate + adapt subject to painter's universe + get anchor paintings
     const analysis = await analyzeAndAdaptSubject(openai, prompt, style);
 
-    // Step 2: Build the final prompt with contextual template
+    // Step 2: Build the final prompt with narrative template + painting anchors
     const enrichedPrompt = buildFinalPrompt(
       analysis.adapted_subject,
       style,
-      analysis.has_figures
+      analysis.has_figures,
+      analysis.anchor_paintings
     );
 
     // Step 3: Determine image size (style default + subject override)
     const imageSize = getImageSize(style, analysis.orientation);
 
-    // Step 4: Generate image with DALL-E 3
+    // Step 4: Generate image with DALL-E 3 (with anti-rewrite prefix)
     const response = await openai.images.generate({
       model: "dall-e-3",
-      prompt: enrichedPrompt,
+      prompt: DALLE_PREFIX + enrichedPrompt,
       n: 1,
       size: imageSize,
       quality: "hd",
@@ -127,6 +139,8 @@ export async function POST(req: NextRequest) {
     });
 
     const dalleUrl = response.data?.[0]?.url;
+    const revisedPrompt = response.data?.[0]?.revised_prompt ?? null;
+
     if (!dalleUrl) {
       return NextResponse.json(
         { error: "No image generated" },
@@ -158,7 +172,7 @@ export async function POST(req: NextRequest) {
       data: { publicUrl },
     } = getSupabaseAdmin().storage.from("paintings").getPublicUrl(fileName);
 
-    // Save generation to database
+    // Save generation to database (including revised_prompt for debugging)
     const { data: generation, error: dbError } = await getSupabaseAdmin()
       .from("generations")
       .insert({
@@ -166,6 +180,7 @@ export async function POST(req: NextRequest) {
         prompt_original: prompt,
         style_choisi: style,
         prompt_enrichi: enrichedPrompt,
+        revised_prompt: revisedPrompt,
         image_url: publicUrl,
       })
       .select("id")
