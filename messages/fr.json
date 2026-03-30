@@ -13,7 +13,9 @@
     "titleHighlight": "Un artiste la réalise pour vous.",
 
     "cta": "Générer ma peinture",
-    "promptPlaceholder": "Décrivez le tableau de vos rêves... Ex : un port normand au coucher du soleil, un portrait à la Rembrandt, un jardin fleuri impressionniste..."
+    "promptPlaceholder": "Décrivez le tableau de vos rêves... Ex : un port normand au coucher du soleil, un portrait à la Rembrandt, un jardin fleuri impressionniste...",
+    "tryExamples": "Essayez :",
+    "chooseStyle": "Choisissez un style"
   },
   "howItWorks": {
     "title": "Comment ça marche",

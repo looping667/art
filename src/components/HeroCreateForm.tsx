@@ -29,69 +29,104 @@ export default function HeroCreateForm() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full max-w-2xl mx-auto bg-white rounded-2xl border border-beige shadow-sm p-5 sm:p-8">
       {/* Textarea */}
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         placeholder={t("hero.promptPlaceholder")}
         rows={3}
-        className="w-full px-5 py-4 rounded-xl border-2 border-beige bg-white focus:outline-none focus:border-terracotta transition-colors text-brown placeholder-brown/30 resize-none shadow-sm text-base"
+        className="w-full px-4 py-3 rounded-xl border-2 border-beige bg-offwhite focus:outline-none focus:border-terracotta transition-colors text-brown placeholder-brown/30 resize-none text-base"
       />
 
       {/* Examples */}
-      <div className="flex flex-wrap gap-1.5 mt-3 mb-4">
+      <div className="flex flex-wrap items-center gap-1.5 mt-3">
+        <span className="text-xs text-brown/40 font-medium mr-1">
+          {t("hero.tryExamples")}
+        </span>
         {examples.map((ex, i) => (
           <button
             key={i}
             onClick={() => setDescription(ex)}
-            className="text-xs px-2.5 py-1 rounded-full bg-white/80 text-brown/60 hover:bg-beige hover:text-brown transition-colors border border-beige/70"
+            className="text-xs px-2.5 py-1 rounded-full text-brown/50 hover:bg-beige/60 hover:text-brown transition-colors italic"
           >
             {ex}
           </button>
         ))}
       </div>
 
-      {/* Style chips */}
-      <div className="flex flex-wrap gap-2 mb-5 justify-center">
-        {artStyles.map((style) => (
-          <button
-            key={style.id}
-            onClick={() => setSelectedStyle(style.id)}
-            className={`text-sm px-4 py-2 rounded-full font-medium transition-all ${
-              selectedStyle === style.id
-                ? "bg-terracotta text-white shadow-md scale-105"
-                : "bg-white text-brown/70 border border-beige hover:border-terracotta/40 hover:text-brown"
-            }`}
-          >
-            {t(`create.${style.nameKey}`)}
-          </button>
-        ))}
+      {/* Separator */}
+      <div className="border-t border-beige my-5" />
+
+      {/* Style selection */}
+      <p className="text-sm font-medium text-brown mb-3">
+        {t("hero.chooseStyle")}
+      </p>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+        {artStyles.map((style) => {
+          const isSelected = selectedStyle === style.id;
+          return (
+            <button
+              key={style.id}
+              onClick={() => setSelectedStyle(style.id)}
+              className={`relative text-left p-3 rounded-xl border-2 transition-all ${
+                isSelected
+                  ? "border-terracotta bg-terracotta/5"
+                  : "border-beige/80 bg-offwhite hover:border-brown/20"
+              }`}
+            >
+              {/* Radio indicator */}
+              <div className="absolute top-3 right-3">
+                <div
+                  className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                    isSelected ? "border-terracotta" : "border-brown/20"
+                  }`}
+                >
+                  {isSelected && (
+                    <div className="w-2 h-2 rounded-full bg-terracotta" />
+                  )}
+                </div>
+              </div>
+              {/* Color dot + name */}
+              <div className="flex items-center gap-2 mb-0.5 pr-5">
+                <div
+                  className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: style.color }}
+                />
+                <span className="text-sm font-semibold text-brown leading-tight">
+                  {t(`create.${style.nameKey}`)}
+                </span>
+              </div>
+              {/* Description */}
+              <p className="text-xs text-brown/50 leading-snug pl-[18px]">
+                {t(`create.${style.descKey}`)}
+              </p>
+            </button>
+          );
+        })}
       </div>
 
       {/* Generate button */}
-      <div className="text-center">
-        <button
-          onClick={handleGenerate}
-          disabled={!description.trim()}
-          className="inline-flex items-center gap-2 bg-terracotta text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-terracotta-dark transition-all hover:shadow-lg hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
+      <button
+        onClick={handleGenerate}
+        disabled={!description.trim()}
+        className="w-full mt-6 inline-flex items-center justify-center gap-2 bg-terracotta text-white px-6 py-3.5 rounded-xl text-base font-medium hover:bg-terracotta-dark transition-all hover:shadow-md disabled:opacity-40 disabled:cursor-not-allowed"
+      >
+        {t("hero.cta")}
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
         >
-          {t("hero.cta")}
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M17 8l4 4m0 0l-4 4m4-4H3"
-            />
-          </svg>
-        </button>
-      </div>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M17 8l4 4m0 0l-4 4m4-4H3"
+          />
+        </svg>
+      </button>
     </div>
   );
 }

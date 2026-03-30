@@ -13,7 +13,9 @@
     "titleHighlight": "An artist brings it to life.",
 
     "cta": "Generate my painting",
-    "promptPlaceholder": "Describe your dream painting... E.g.: a Norman harbor at sunset, a Rembrandt-style portrait, an impressionist flower garden..."
+    "promptPlaceholder": "Describe your dream painting... E.g.: a Norman harbor at sunset, a Rembrandt-style portrait, an impressionist flower garden...",
+    "tryExamples": "Try:",
+    "chooseStyle": "Choose a style"
   },
   "howItWorks": {
     "title": "How it works",
