@@ -11,7 +11,7 @@
   "hero": {
     "title": "Describe your painting.",
     "titleHighlight": "An artist brings it to life.",
-    "subtitle": "Describe the scene of your dreams, choose an artistic style, and receive a unique hand-painted artwork by a partner artist.",
+
     "cta": "Generate my painting",
     "promptPlaceholder": "Describe your dream painting... E.g.: a Norman harbor at sunset, a Rembrandt-style portrait, an impressionist flower garden..."
   },

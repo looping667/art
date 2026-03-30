@@ -18,10 +18,6 @@ export default function HomePage() {
             <br />
             <span className="text-terracotta">{t("hero.titleHighlight")}</span>
           </h1>
-          <p className="text-lg sm:text-xl text-brown/70 max-w-2xl mx-auto mb-8 leading-relaxed">
-            {t("hero.subtitle")}
-          </p>
-
           <HeroCreateForm />
         </div>
 
@@ -100,7 +96,6 @@ export default function HomePage() {
             <br />
             <span className="text-gold">{t("hero.titleHighlight")}</span>
           </h2>
-          <p className="text-white/70 mb-8">{t("hero.subtitle")}</p>
           <Link
             href={`/${locale}/create`}
             className="inline-flex items-center gap-2 bg-terracotta text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-terracotta-dark transition-all hover:shadow-lg"

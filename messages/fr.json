@@ -11,7 +11,7 @@
   "hero": {
     "title": "Décrivez votre peinture.",
     "titleHighlight": "Un artiste la réalise pour vous.",
-    "subtitle": "Décrivez la scène de vos rêves, choisissez un style artistique, et recevez une peinture unique réalisée à la main par un artiste partenaire.",
+
     "cta": "Générer ma peinture",
     "promptPlaceholder": "Décrivez le tableau de vos rêves... Ex : un port normand au coucher du soleil, un portrait à la Rembrandt, un jardin fleuri impressionniste..."
   },
