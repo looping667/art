@@ -63,7 +63,7 @@ Respond in JSON only:
       systemInstruction: systemPrompt,
       responseMimeType: "application/json",
       temperature: 0.7,
-      maxOutputTokens: 600,
+      maxOutputTokens: 1200,
     },
   });
 
