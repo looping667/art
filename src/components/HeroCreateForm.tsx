@@ -11,6 +11,7 @@ export default function HeroCreateForm() {
   const router = useRouter();
   const [description, setDescription] = useState("");
   const [selectedStyle, setSelectedStyle] = useState("free");
+  const [enhancing, setEnhancing] = useState(false);
 
   const examples = [
     t("create.descExample1"),
@@ -18,6 +19,28 @@ export default function HeroCreateForm() {
     t("create.descExample3"),
     t("create.descExample4"),
   ];
+
+  const handleEnhance = async () => {
+    if (!description.trim() || enhancing) return;
+    setEnhancing(true);
+    try {
+      const res = await fetch("/api/enhance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt: description,
+          style: selectedStyle,
+          locale,
+        }),
+      });
+      const data = await res.json();
+      if (data.enhanced) setDescription(data.enhanced);
+    } catch {
+      // silently fail — user keeps their original text
+    } finally {
+      setEnhancing(false);
+    }
+  };
 
   const handleGenerate = () => {
     if (!description.trim()) return;
@@ -54,6 +77,30 @@ export default function HeroCreateForm() {
           </button>
         ))}
       </div>
+
+      {/* Enhance button */}
+      <button
+        onClick={handleEnhance}
+        disabled={!description.trim() || enhancing}
+        className="mt-3 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium border-2 border-gold/40 text-gold hover:bg-gold/10 hover:border-gold/60 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+      >
+        {enhancing ? (
+          <>
+            <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            {t("hero.enhancing")}
+          </>
+        ) : (
+          <>
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L9.19 8.63L2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z" />
+            </svg>
+            {t("hero.enhance")}
+          </>
+        )}
+      </button>
 
       {/* Separator */}
       <div className="border-t border-beige my-5" />

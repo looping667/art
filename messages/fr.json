@@ -18,7 +18,9 @@
     "createSubtitle": "Décrivez votre vision, choisissez un style, et voyez votre peinture prendre vie.",
     "promptPlaceholder": "Décrivez le tableau de vos rêves... Ex : un port normand au coucher du soleil, un portrait à la Rembrandt, un jardin fleuri impressionniste...",
     "tryExamples": "Essayez :",
-    "chooseStyle": "Choisissez un style"
+    "chooseStyle": "Choisissez un style",
+    "enhance": "Enrichir ma description",
+    "enhancing": "Enrichissement..."
   },
   "howItWorks": {
     "title": "Comment ça marche",
@@ -53,6 +55,8 @@
     "descExample2": "Un jardin fleuri au printemps avec un petit pont",
     "descExample3": "Une ruelle pavée de Montmartre sous la pluie",
     "descExample4": "Un paysage de lavande en Provence",
+    "enhance": "Enrichir ma description",
+    "enhancing": "Enrichissement...",
     "continue": "Continuer",
     "back": "Retour",
     "styleTitle": "Choisissez un style artistique",

@@ -33,7 +33,6 @@ IMPORTANT: If the detected artist is still living (born after 1930 with no known
 
 ${styleContextBlock}
 
-YOUR TASKS:
 YOUR TASKS (be CONCISE — max 1 sentence per field):
 1. TRANSLATE to English if needed.
 2. ENRICH: 2 sentences max — vivid painting scene with atmosphere and light.

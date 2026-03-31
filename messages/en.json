@@ -18,7 +18,9 @@
     "createSubtitle": "Describe your vision, choose a style, and watch your painting come to life.",
     "promptPlaceholder": "Describe your dream painting... E.g.: a Norman harbor at sunset, a Rembrandt-style portrait, an impressionist flower garden...",
     "tryExamples": "Try:",
-    "chooseStyle": "Choose a style"
+    "chooseStyle": "Choose a style",
+    "enhance": "Enhance my description",
+    "enhancing": "Enhancing..."
   },
   "howItWorks": {
     "title": "How it works",
@@ -53,6 +55,8 @@
     "descExample2": "A blooming garden in spring with a small bridge",
     "descExample3": "A cobblestone alley in Montmartre in the rain",
     "descExample4": "A lavender landscape in Provence",
+    "enhance": "Enhance my description",
+    "enhancing": "Enhancing...",
     "continue": "Continue",
     "back": "Back",
     "styleTitle": "Choose an artistic style",

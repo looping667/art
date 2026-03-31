@@ -13,6 +13,9 @@ export interface ArtStyle {
 const NO_SWATCH =
   "IMPORTANT: Generate ONLY the painting itself filling the entire image edge to edge. NEVER include a picture frame, wall, easel, color palette, color swatches, paint tubes, art supplies, labels, text, annotations, or any element outside the painting. The painting IS the image — no border, no frame, no meta-elements.";
 
+const PAINTING_TEXTURE =
+  "The surface must show physical painting texture: visible brushstrokes with varying thickness, subtle canvas weave showing through thin paint areas, slight impasto in highlights, soft blended edges between color areas. This is a real oil painting on canvas, not a digital rendering — include the gentle irregularities and warmth of a hand-painted surface.";
+
 export const artStyles: ArtStyle[] = [
   {
     id: "boudin",
@@ -145,6 +148,7 @@ export function buildFinalPrompt(
         `Closely resembling the technique and atmosphere seen in ${analysis.anchor_paintings.join(" and ")}.`
       );
     }
+    parts.push(PAINTING_TEXTURE);
     parts.push(NO_SWATCH);
     return parts.join(" ");
   }
@@ -160,7 +164,9 @@ export function buildFinalPrompt(
       ? analysis.anchor_paintings.join(" and ")
       : "this artist's most celebrated works";
 
-  return template
+  const base = template
     .replace("[SUBJECT]", analysis.adapted_subject)
     .replace("[ANCHORS]", anchorsText);
+
+  return `${base} ${PAINTING_TEXTURE}`;
 }
