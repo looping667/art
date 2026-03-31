@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
       model: "gemini-3-pro-image-preview",
       contents: prompt,
       config: {
+        responseModalities: ["TEXT"],
         systemInstruction: `You are an art director helping someone describe their dream painting. Enrich their description with vivid visual details: lighting, atmosphere, colors, season, time of day, textures, mood. Make the scene come alive as if describing a painting hanging in a museum.
 ${styleHint}
 RULES:
@@ -42,7 +43,10 @@ RULES:
       },
     });
 
-    const enhanced = response.text?.trim();
+    const candidates = response.candidates ?? [];
+    const parts = candidates[0]?.content?.parts ?? [];
+    const textPart = parts.find((p: { text?: string }) => p.text);
+    const enhanced = textPart?.text?.trim() ?? response.text?.trim();
 
     if (!enhanced) {
       return NextResponse.json(

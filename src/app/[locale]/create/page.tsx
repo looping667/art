@@ -44,10 +44,21 @@ export default function CreatePage() {
           locale,
         }),
       });
-      const data = await res.json();
-      if (data.enhanced) setDescription(data.enhanced);
-    } catch {
-      // silently fail
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        console.error("Enhance response not JSON:", text.slice(0, 200));
+        return;
+      }
+      if (data.enhanced) {
+        setDescription(data.enhanced);
+      } else {
+        console.error("Enhance: no enhanced field", data);
+      }
+    } catch (err) {
+      console.error("Enhance failed:", err);
     } finally {
       setEnhancing(false);
     }
