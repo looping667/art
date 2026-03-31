@@ -102,10 +102,7 @@ export function getAspectRatio(
   styleId: string,
   orientationOverride?: "landscape" | "portrait"
 ): string {
-  const style = getStyleById(styleId);
-  const orientation =
-    orientationOverride ?? style?.defaultOrientation ?? "landscape";
-  return orientation === "portrait" ? "9:16" : "16:9";
+  return "1:1";
 }
 
 export interface SubjectAnalysis {

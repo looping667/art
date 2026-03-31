@@ -24,7 +24,7 @@ export default function OrderForm({
     nom: "",
     email: "",
     telephone: "",
-    format: "60x80",
+    format: "30x30",
     messageArtiste: "",
   });
 
@@ -138,9 +138,8 @@ export default function OrderForm({
           onChange={(e) => setForm({ ...form, format: e.target.value })}
           className={inputClass("format")}
         >
-          <option value="40x50">{t("format40x50")}</option>
-          <option value="60x80">{t("format60x80")}</option>
-          <option value="100x120">{t("format100x120")}</option>
+          <option value="30x30">{t("format30x30")}</option>
+          <option value="40x40">{t("format40x40")}</option>
         </select>
       </div>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import Image from "next/image";
+import FramedPainting from "./FramedPainting";
 
 const paintings = [
   { src: "/gallery/painting-1.jpg", labelKey: "painting1" },
@@ -27,15 +27,11 @@ export default function PaintingMarquee() {
       >
         {items.map((painting, i) => (
           <div key={i} className="flex-shrink-0 w-56 sm:w-72 lg:w-80">
-            <div className="bg-brown/90 p-2 sm:p-2.5 rounded-lg shadow-2xl">
-              <Image
-                src={painting.src}
-                alt={t(painting.labelKey)}
-                width={600}
-                height={750}
-                className="w-full aspect-[4/5] object-cover rounded-sm"
-              />
-            </div>
+            <FramedPainting
+              src={painting.src}
+              alt={t(painting.labelKey)}
+              size={600}
+            />
             <p className="text-center mt-2.5 text-xs sm:text-sm text-brown/50 italic">
               {t(painting.labelKey)}
             </p>

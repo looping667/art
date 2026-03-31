@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import Image from "next/image";
 import Link from "next/link";
+import FramedPainting from "@/components/FramedPainting";
 import StepIndicator from "@/components/StepIndicator";
 import StyleCard from "@/components/StyleCard";
 import OrderForm from "@/components/OrderForm";
@@ -118,14 +118,8 @@ export default function CreatePage() {
           {t("confirmMessage", { email: confirmEmail })}
         </p>
         {imageUrl && (
-          <div className="mb-8 rounded-xl overflow-hidden shadow-lg inline-block">
-            <Image
-              src={imageUrl}
-              alt="Your painting"
-              width={400}
-              height={400}
-              className="object-cover"
-            />
+          <div className="mb-8">
+            <FramedPainting src={imageUrl} alt="Your painting" size={400} />
           </div>
         )}
         <div>
@@ -234,13 +228,12 @@ export default function CreatePage() {
 
           {imageUrl && !loading && (
             <div className="space-y-6">
-              <div className="rounded-2xl overflow-hidden shadow-lg border border-beige mx-auto max-w-md">
-                <Image
+              <div className="flex justify-center">
+                <FramedPainting
                   src={imageUrl}
                   alt="Generated painting"
-                  width={1024}
-                  height={1024}
-                  className="w-full h-auto"
+                  size={1024}
+                  className="max-w-md w-full"
                 />
               </div>
               <p className="text-center text-sm text-brown/50">
@@ -284,15 +277,7 @@ export default function CreatePage() {
           </h2>
           {imageUrl && (
             <div className="flex justify-center mb-4">
-              <div className="w-48 h-48 rounded-xl overflow-hidden shadow-md border border-beige">
-                <Image
-                  src={imageUrl}
-                  alt="Your painting"
-                  width={192}
-                  height={192}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+              <FramedPainting src={imageUrl} alt="Your painting" size={192} />
             </div>
           )}
           <OrderForm
