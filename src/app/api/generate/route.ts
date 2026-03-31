@@ -138,17 +138,28 @@ export async function POST(req: NextRequest) {
     const aspectRatio = getAspectRatio(style, analysis.orientation);
 
     // Step 4: Generate image with Gemini
-    const imageResponse = await ai.models.generateContent({
-      model: "gemini-3-pro-image-preview",
-      contents: enrichedPrompt,
-      config: {
-        responseModalities: ["IMAGE"],
-        imageConfig: {
-          aspectRatio: aspectRatio,
-          imageSize: "2K",
+    let imageResponse;
+    try {
+      imageResponse = await ai.models.generateContent({
+        model: "gemini-3-pro-image-preview",
+        contents: enrichedPrompt,
+        config: {
+          responseModalities: ["IMAGE"],
+          imageConfig: {
+            aspectRatio: aspectRatio,
+            imageSize: "2K",
+          },
         },
-      },
-    });
+      });
+    } catch (imgErr) {
+      const imgMsg =
+        imgErr instanceof Error ? imgErr.message : "Image generation failed";
+      console.error("Gemini image error:", imgMsg);
+      return NextResponse.json(
+        { error: `Image generation failed: ${imgMsg}` },
+        { status: 500 }
+      );
+    }
 
     const parts = imageResponse.candidates?.[0]?.content?.parts ?? [];
     const imagePart = parts.find(
@@ -156,8 +167,12 @@ export async function POST(req: NextRequest) {
     ) as { inlineData: { data: string; mimeType: string } } | undefined;
 
     if (!imagePart?.inlineData) {
+      console.error(
+        "No image in Gemini response:",
+        JSON.stringify(imageResponse.candidates?.[0] ?? {}).slice(0, 500)
+      );
       return NextResponse.json(
-        { error: "No image generated" },
+        { error: "No image generated — the model returned no image data" },
         { status: 500 }
       );
     }
