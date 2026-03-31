@@ -32,29 +32,20 @@ IMPORTANT: If the detected artist is still living (born after 1930 with no known
 ${styleContextBlock}
 
 YOUR TASKS:
-1. TRANSLATE: If the text is not in English, translate it to English.
-2. ENRICH THE SCENE: Transform the user's text into a vivid, detailed 2-3 sentence painting scene description. Add atmosphere, time of day, specific visual details, emotional mood. Even a minimal input like "a cat" must become a complete, painterly scene.
-3. PAINTING TECHNIQUE: Describe the brushwork, paint application, texture, medium, and surface finish in detail (e.g. "thick impasto highlights with thin transparent glazes in the shadows, visible canvas weave").
-4. COLOR PALETTE: Describe the palette using color names only — NEVER hex codes. Be specific (e.g. "warm cadmium yellow, deep ultramarine blue, burnt sienna" not just "warm colors").
-5. LIGHTING: Describe the quality, direction, temperature, and atmosphere of the light (e.g. "low-angle golden afternoon light from the left casting long violet shadows").
-6. COMPOSITION: Describe the framing, perspective, focal point placement, and spatial structure (e.g. "wide horizontal composition with a low horizon line, subject placed at the right third").
-7. ANCHOR PAINTINGS: Name 2-3 actual famous paintings that are closest in subject or mood — these serve as visual style references.
-8. FIGURES: Detect whether the scene contains human figures or people.
-9. ORIENTATION: Determine the best painting orientation (landscape or portrait) for this scene.
-10. ARTIST DETECTION: If the user mentioned a specific artist (in free style mode), identify them. Otherwise null.
+YOUR TASKS (be CONCISE — max 1 sentence per field):
+1. TRANSLATE to English if needed.
+2. ENRICH: 2 sentences max — vivid painting scene with atmosphere and light.
+3. TECHNIQUE: 1 sentence — brushwork, medium, texture.
+4. PALETTE: List 4-5 color names (no hex codes).
+5. LIGHTING: 1 sentence — direction, quality, temperature.
+6. COMPOSITION: 1 sentence — framing and focal point.
+7. ANCHORS: 2 famous painting titles as style references.
+8. FIGURES: boolean — are there human figures?
+9. ORIENTATION: landscape or portrait.
+10. ARTIST: detected artist name or null.
 
-Respond in JSON only:
-{
-  "adapted_subject": "2-3 sentence vivid scene description in English",
-  "painting_technique": "detailed brushwork and technique description",
-  "color_palette": "specific color names describing the palette",
-  "lighting": "detailed lighting description",
-  "composition": "framing and composition description",
-  "anchor_paintings": ["Famous Painting Title 1", "Famous Painting Title 2"],
-  "has_figures": true or false,
-  "orientation": "landscape" or "portrait",
-  "detected_artist": "Artist Name or null"
-}`;
+Respond in compact JSON only:
+{"adapted_subject":"...","painting_technique":"...","color_palette":"...","lighting":"...","composition":"...","anchor_paintings":["...","..."],"has_figures":false,"orientation":"landscape","detected_artist":null}`;
 
   const response = await ai.models.generateContent({
     model: "gemini-3-pro-image-preview",
@@ -63,7 +54,7 @@ Respond in JSON only:
       systemInstruction: systemPrompt,
       responseMimeType: "application/json",
       temperature: 0.7,
-      maxOutputTokens: 1200,
+      maxOutputTokens: 2048,
     },
   });
 
@@ -84,7 +75,29 @@ Respond in JSON only:
     };
   }
 
-  const parsed = JSON.parse(content);
+  let parsed;
+  try {
+    parsed = JSON.parse(content);
+  } catch {
+    // If JSON is truncated, try to salvage by closing the string
+    const repaired = content.replace(/,\s*"[^"]*$/, "").replace(/[^}]*$/, "}");
+    try {
+      parsed = JSON.parse(repaired);
+    } catch {
+      console.error("Failed to parse enrichment JSON:", content);
+      return {
+        adapted_subject: userSubject,
+        painting_technique: "",
+        color_palette: "",
+        lighting: "",
+        composition: "",
+        anchor_paintings: [],
+        has_figures: false,
+        orientation: fallbackOrientation,
+        detected_artist: null,
+      };
+    }
+  }
   return {
     adapted_subject: parsed.adapted_subject || userSubject,
     painting_technique: parsed.painting_technique || "",
