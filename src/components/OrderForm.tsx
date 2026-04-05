@@ -10,6 +10,14 @@ interface OrderFormProps {
   onBack: () => void;
 }
 
+const PRICES: Record<string, string> = {
+  "30x30": "price30x30",
+  "30x40": "price30x40",
+  "40x40": "price40x40",
+  "50x50": "price50x50",
+  "100x100": "price100x100",
+};
+
 export default function OrderForm({
   generationId,
   imageUrl,
@@ -17,6 +25,7 @@ export default function OrderForm({
   onBack,
 }: OrderFormProps) {
   const t = useTranslations("create");
+  const tPricing = useTranslations("pricing");
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [form, setForm] = useState({
@@ -144,6 +153,12 @@ export default function OrderForm({
           <option value="50x50">{t("format50x50")}</option>
           <option value="100x100">{t("format100x100")}</option>
         </select>
+        <div className="mt-3 flex items-center justify-between rounded-xl bg-beige/40 border border-beige px-4 py-3">
+          <span className="text-sm text-brown/70">{tPricing("includes")}</span>
+          <span className="font-serif text-2xl font-bold text-terracotta">
+            {tPricing(PRICES[form.format] ?? "price30x30")}
+          </span>
+        </div>
       </div>
 
       <div>

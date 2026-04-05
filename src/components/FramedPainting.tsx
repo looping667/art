@@ -16,11 +16,14 @@ export default function FramedPainting({
   className = "",
 }: FramedPaintingProps) {
   return (
-    <div className={`inline-block ${className}`}>
-      <div className="relative">
+    <div
+      className={`block w-full ${className}`}
+      style={{ maxWidth: size }}
+    >
+      <div className="relative w-full">
         {/* Outer frame — dark walnut wood */}
         <div
-          className="relative p-[6%] rounded-sm"
+          className="relative w-full p-[6%] rounded-sm"
           style={{
             background:
               "linear-gradient(145deg, #5a3a1a 0%, #3d2510 25%, #4a2e14 50%, #5c3818 75%, #3a2008 100%)",

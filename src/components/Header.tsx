@@ -26,6 +26,12 @@ export default function Header() {
             {t("howItWorks")}
           </Link>
           <Link
+            href={`/${locale}#pricing`}
+            className="hidden sm:block text-sm text-brown/70 hover:text-terracotta transition-colors"
+          >
+            {t("pricing")}
+          </Link>
+          <Link
             href={`/${locale}/create`}
             className="text-sm font-medium bg-terracotta text-white px-4 py-2 rounded-full hover:bg-terracotta-dark transition-colors"
           >

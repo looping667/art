@@ -157,7 +157,7 @@ export default function CreatePage() {
           {t("confirmMessage", { email: confirmEmail })}
         </p>
         {imageUrl && (
-          <div className="mb-8">
+          <div className="mb-8 flex justify-center">
             <FramedPainting src={imageUrl} alt="Your painting" size={400} />
           </div>
         )}

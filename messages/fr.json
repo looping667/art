@@ -6,7 +6,8 @@
   "header": {
     "brand": "Atelier Toile",
     "create": "Créer ma peinture",
-    "howItWorks": "Comment ça marche"
+    "howItWorks": "Comment ça marche",
+    "pricing": "Tarifs"
   },
   "hero": {
     "title": "Décrivez votre peinture.",
@@ -43,6 +44,21 @@
   "footer": {
     "tagline": "L'art sur mesure, à portée de mots.",
     "copyright": "© {year} Atelier Toile. Tous droits réservés."
+  },
+  "pricing": {
+    "title": "Nos tarifs",
+    "subtitle": "Peinture à l'huile sur toile, réalisée à la main. Livraison incluse en France métropolitaine.",
+    "includes": "Prix tout compris",
+    "includedShipping": "Livraison incluse",
+    "includedFrame": "Sans cadre",
+    "includedArtist": "Peinte à la main par un artiste",
+    "popular": "Le plus choisi",
+    "price30x30": "120 €",
+    "price30x40": "135 €",
+    "price40x40": "149 €",
+    "price50x50": "179 €",
+    "price100x100": "1 100 €",
+    "ctaStart": "Commencer ma peinture"
   },
   "create": {
     "stepDescriptionAndStyle": "Description & Style",

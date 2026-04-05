@@ -6,7 +6,8 @@
   "header": {
     "brand": "Atelier Toile",
     "create": "Create my painting",
-    "howItWorks": "How it works"
+    "howItWorks": "How it works",
+    "pricing": "Pricing"
   },
   "hero": {
     "title": "Describe your painting.",
@@ -43,6 +44,21 @@
   "footer": {
     "tagline": "Custom art, just a few words away.",
     "copyright": "© {year} Atelier Toile. All rights reserved."
+  },
+  "pricing": {
+    "title": "Our prices",
+    "subtitle": "Oil on canvas, entirely hand-painted. Free shipping within mainland France.",
+    "includes": "All-inclusive price",
+    "includedShipping": "Shipping included",
+    "includedFrame": "Unframed",
+    "includedArtist": "Hand-painted by an artist",
+    "popular": "Most popular",
+    "price30x30": "€120",
+    "price30x40": "€135",
+    "price40x40": "€149",
+    "price50x50": "€179",
+    "price100x100": "€1,100",
+    "ctaStart": "Start my painting"
   },
   "create": {
     "stepDescriptionAndStyle": "Description & Style",

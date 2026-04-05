@@ -3,6 +3,7 @@ import { useLocale } from "next-intl";
 import Link from "next/link";
 import HeroCreateForm from "@/components/HeroCreateForm";
 import PaintingMarquee from "@/components/PaintingMarquee";
+import PricingGrid from "@/components/PricingGrid";
 
 export default function HomePage() {
   const t = useTranslations();
@@ -101,6 +102,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Pricing */}
+      <PricingGrid />
 
       {/* Final CTA */}
       <section className="py-16 sm:py-24 px-4 sm:px-6 bg-brown text-white text-center">
