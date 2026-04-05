@@ -26,10 +26,9 @@ export async function POST(req: NextRequest) {
     const lang = locale === "fr" ? "French" : "English";
 
     const response = await ai.models.generateContent({
-      model: "gemini-3-pro-image-preview",
+      model: "gemini-2.5-flash",
       contents: prompt,
       config: {
-        responseModalities: ["TEXT"],
         systemInstruction: `You are an art director helping someone describe their dream painting. Enrich their description with vivid visual details: lighting, atmosphere, colors, season, time of day, textures, mood. Make the scene come alive as if describing a painting hanging in a museum.
 ${styleHint}
 RULES:
