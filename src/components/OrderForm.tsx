@@ -139,7 +139,10 @@ export default function OrderForm({
           className={inputClass("format")}
         >
           <option value="30x30">{t("format30x30")}</option>
+          <option value="30x40">{t("format30x40")}</option>
           <option value="40x40">{t("format40x40")}</option>
+          <option value="50x50">{t("format50x50")}</option>
+          <option value="100x100">{t("format100x100")}</option>
         </select>
       </div>
 
