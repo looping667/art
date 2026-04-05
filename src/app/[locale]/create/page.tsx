@@ -7,7 +7,6 @@ import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
 import FramedPainting from "@/components/FramedPainting";
 import StepIndicator from "@/components/StepIndicator";
-import StyleCard from "@/components/StyleCard";
 import OrderForm from "@/components/OrderForm";
 import GenerationProgress from "@/components/GenerationProgress";
 import { artStyles } from "@/lib/styles";
@@ -235,18 +234,36 @@ export default function CreatePage() {
             <h3 className="font-serif text-xl font-semibold text-brown mb-4">
               {t("styleTitle")}
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {artStyles.map((style) => (
-                <StyleCard
-                  key={style.id}
-                  name={t(style.nameKey)}
-                  description={t(style.descKey)}
-                  color={style.color}
-                  selected={selectedStyle === style.id}
-                  onClick={() => setSelectedStyle(style.id)}
-                />
-              ))}
+            <div className="flex flex-wrap gap-2">
+              {artStyles.map((style) => {
+                const isSelected = selectedStyle === style.id;
+                return (
+                  <button
+                    key={style.id}
+                    type="button"
+                    onClick={() => setSelectedStyle(style.id)}
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 text-sm font-medium transition-all ${
+                      isSelected
+                        ? "border-terracotta bg-terracotta/10 text-brown shadow-sm"
+                        : "border-beige bg-white text-brown/70 hover:border-brown/20 hover:text-brown"
+                    }`}
+                  >
+                    <span
+                      className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: style.color }}
+                    />
+                    {t(style.nameKey)}
+                  </button>
+                );
+              })}
             </div>
+            <p className="mt-3 text-xs text-brown/50 italic min-h-[1rem]">
+              {selectedStyle
+                ? t(
+                    artStyles.find((s) => s.id === selectedStyle)?.descKey ?? ""
+                  )
+                : ""}
+            </p>
           </div>
 
           <div className="flex justify-end">

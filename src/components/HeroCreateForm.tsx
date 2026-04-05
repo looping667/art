@@ -13,6 +13,11 @@ export default function HeroCreateForm() {
   const [selectedStyle, setSelectedStyle] = useState("free");
   const [enhancing, setEnhancing] = useState(false);
 
+  const selectedStyleObj = artStyles.find((s) => s.id === selectedStyle);
+  const selectedStyleDesc = selectedStyleObj
+    ? t(`create.${selectedStyleObj.descKey}`)
+    : "";
+
   const examples = [
     t("create.descExample1"),
     t("create.descExample2"),
@@ -120,49 +125,33 @@ export default function HeroCreateForm() {
       <p className="text-sm font-medium text-brown mb-3">
         {t("hero.chooseStyle")}
       </p>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5">
+      <div className="flex flex-wrap gap-2">
         {artStyles.map((style) => {
           const isSelected = selectedStyle === style.id;
           return (
             <button
               key={style.id}
+              type="button"
               onClick={() => setSelectedStyle(style.id)}
-              className={`relative text-left p-3 rounded-xl border-2 transition-all ${
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 text-sm font-medium transition-all ${
                 isSelected
-                  ? "border-terracotta bg-terracotta/5"
-                  : "border-beige/80 bg-offwhite hover:border-brown/20"
+                  ? "border-terracotta bg-terracotta/10 text-brown shadow-sm"
+                  : "border-beige bg-offwhite text-brown/70 hover:border-brown/20 hover:text-brown"
               }`}
             >
-              {/* Radio indicator */}
-              <div className="absolute top-3 right-3">
-                <div
-                  className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                    isSelected ? "border-terracotta" : "border-brown/20"
-                  }`}
-                >
-                  {isSelected && (
-                    <div className="w-2 h-2 rounded-full bg-terracotta" />
-                  )}
-                </div>
-              </div>
-              {/* Color dot + name */}
-              <div className="flex items-center gap-2 mb-0.5 pr-5">
-                <div
-                  className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: style.color }}
-                />
-                <span className="text-sm font-semibold text-brown leading-tight">
-                  {t(`create.${style.nameKey}`)}
-                </span>
-              </div>
-              {/* Description */}
-              <p className="text-xs text-brown/50 leading-snug pl-[18px]">
-                {t(`create.${style.descKey}`)}
-              </p>
+              <span
+                className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                style={{ backgroundColor: style.color }}
+              />
+              {t(`create.${style.nameKey}`)}
             </button>
           );
         })}
       </div>
+      {/* Selected style description */}
+      <p className="mt-3 text-xs text-brown/50 italic min-h-[1rem]">
+        {selectedStyleDesc}
+      </p>
 
       {/* Generate button */}
       <button
