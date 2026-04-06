@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
@@ -9,6 +9,7 @@ import FramedPainting from "@/components/FramedPainting";
 import StepIndicator from "@/components/StepIndicator";
 import OrderForm from "@/components/OrderForm";
 import GenerationProgress from "@/components/GenerationProgress";
+import ImageDropZone from "@/components/ImageDropZone";
 import { artStyles } from "@/lib/styles";
 
 type Step = 0 | 1 | 2 | 3;
@@ -29,6 +30,17 @@ export default function CreatePage() {
   const [confirmEmail, setConfirmEmail] = useState("");
   const [autoGenerate, setAutoGenerate] = useState(false);
   const [enhancing, setEnhancing] = useState(false);
+  const [referenceImage, setReferenceImage] = useState<{
+    base64: string;
+    mimeType: string;
+  } | null>(null);
+
+  const handleImageChange = useCallback(
+    (data: { base64: string; mimeType: string } | null) => {
+      setReferenceImage(data);
+    },
+    []
+  );
 
   const handleEnhance = async () => {
     if (!description.trim() || enhancing) return;
@@ -74,13 +86,21 @@ export default function CreatePage() {
     }
   }, []);
 
-  // Read query params from hero form
+  // Read query params + reference image from hero form
   useEffect(() => {
     const prompt = searchParams.get("prompt");
     const style = searchParams.get("style");
     if (prompt) {
       setDescription(prompt);
       if (style) setSelectedStyle(style);
+      // Recover reference image from sessionStorage (hero form stores it there)
+      const stored = sessionStorage.getItem("refImage");
+      if (stored) {
+        try {
+          setReferenceImage(JSON.parse(stored));
+        } catch { /* ignore */ }
+        sessionStorage.removeItem("refImage");
+      }
       setStep(1);
       setAutoGenerate(true);
     }
@@ -120,6 +140,7 @@ export default function CreatePage() {
           prompt: description,
           style: selectedStyle,
           sessionId,
+          ...(referenceImage ? { referenceImage } : {}),
         }),
       });
       const text = await res.text();
@@ -228,6 +249,21 @@ export default function CreatePage() {
               </>
             )}
           </button>
+
+          {/* Reference image drop zone */}
+          <ImageDropZone
+            onImage={handleImageChange}
+            label={
+              referenceImage
+                ? t("imageAttached")
+                : t("dropImage")
+            }
+            hint={
+              referenceImage
+                ? t("imageAttachedHint")
+                : t("dropImageHint")
+            }
+          />
 
           {/* Style selection inline */}
           <div>

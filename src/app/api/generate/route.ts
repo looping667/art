@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, createPartFromBase64 } from "@google/genai";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import {
   getStyleById,
@@ -104,7 +104,7 @@ Respond in compact JSON only:
 
 export async function POST(req: NextRequest) {
   try {
-    const { prompt, style, sessionId } = await req.json();
+    const { prompt, style, sessionId, referenceImage } = await req.json();
 
     if (!prompt || !style || !sessionId) {
       return NextResponse.json(
@@ -122,19 +122,42 @@ export async function POST(req: NextRequest) {
     const enrichedPrompt = buildFinalPrompt(analysis, style);
 
     // Step 3: Generate image with the image model
+    // If user provided a reference image, send it alongside the prompt
     let imageResponse;
     try {
-      imageResponse = await ai.models.generateContent({
-        model: IMAGE_MODEL,
-        contents: enrichedPrompt,
-        config: {
-          responseModalities: ["IMAGE"],
-          imageConfig: {
-            aspectRatio: "1:1",
-            imageSize: "2K",
+      if (referenceImage) {
+        // referenceImage = { base64: string, mimeType: string }
+        const refPart = createPartFromBase64(
+          referenceImage.base64,
+          referenceImage.mimeType
+        );
+        imageResponse = await ai.models.generateContent({
+          model: IMAGE_MODEL,
+          contents: [
+            refPart,
+            `Transform this reference image into a painting. ${enrichedPrompt}`,
+          ],
+          config: {
+            responseModalities: ["IMAGE"],
+            imageConfig: {
+              aspectRatio: "1:1",
+              imageSize: "2K",
+            },
           },
-        },
-      });
+        });
+      } else {
+        imageResponse = await ai.models.generateContent({
+          model: IMAGE_MODEL,
+          contents: enrichedPrompt,
+          config: {
+            responseModalities: ["IMAGE"],
+            imageConfig: {
+              aspectRatio: "1:1",
+              imageSize: "2K",
+            },
+          },
+        });
+      }
     } catch (imgErr) {
       const imgMsg =
         imgErr instanceof Error ? imgErr.message : "Image generation failed";

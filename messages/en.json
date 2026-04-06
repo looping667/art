@@ -21,7 +21,11 @@
     "tryExamples": "Try:",
     "chooseStyle": "Choose a style",
     "enhance": "Enhance my description",
-    "enhancing": "Enhancing..."
+    "enhancing": "Enhancing...",
+    "dropImage": "Drag a reference photo here or click to browse",
+    "dropImageHint": "JPG, PNG or WebP — max 5 MB",
+    "imageAttached": "Reference photo added",
+    "imageAttachedHint": "Your image will be transformed into a painting"
   },
   "howItWorks": {
     "title": "How it works",
@@ -73,6 +77,10 @@
     "descExample4": "A lavender landscape in Provence",
     "enhance": "Enhance my description",
     "enhancing": "Enhancing...",
+    "dropImage": "Drag a reference photo here or click to browse",
+    "dropImageHint": "JPG, PNG or WebP — max 5 MB",
+    "imageAttached": "Reference photo added",
+    "imageAttachedHint": "Your image will be transformed into a painting",
     "continue": "Continue",
     "back": "Back",
     "styleTitle": "Choose an artistic style",

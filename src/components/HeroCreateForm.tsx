@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { artStyles } from "@/lib/styles";
+import ImageDropZone from "@/components/ImageDropZone";
 
 export default function HeroCreateForm() {
   const t = useTranslations();
@@ -12,6 +13,17 @@ export default function HeroCreateForm() {
   const [description, setDescription] = useState("");
   const [selectedStyle, setSelectedStyle] = useState("free");
   const [enhancing, setEnhancing] = useState(false);
+  const [referenceImage, setReferenceImage] = useState<{
+    base64: string;
+    mimeType: string;
+  } | null>(null);
+
+  const handleImageChange = useCallback(
+    (data: { base64: string; mimeType: string } | null) => {
+      setReferenceImage(data);
+    },
+    []
+  );
 
   const selectedStyleObj = artStyles.find((s) => s.id === selectedStyle);
   const selectedStyleDesc = selectedStyleObj
@@ -60,6 +72,12 @@ export default function HeroCreateForm() {
 
   const handleGenerate = () => {
     if (!description.trim()) return;
+    // Store reference image in sessionStorage (too large for URL params)
+    if (referenceImage) {
+      sessionStorage.setItem("refImage", JSON.stringify(referenceImage));
+    } else {
+      sessionStorage.removeItem("refImage");
+    }
     const params = new URLSearchParams({
       prompt: description,
       style: selectedStyle,
@@ -117,6 +135,23 @@ export default function HeroCreateForm() {
           </>
         )}
       </button>
+
+      {/* Reference image drop zone */}
+      <div className="mt-4">
+        <ImageDropZone
+          onImage={handleImageChange}
+          label={
+            referenceImage
+              ? t("hero.imageAttached")
+              : t("hero.dropImage")
+          }
+          hint={
+            referenceImage
+              ? t("hero.imageAttachedHint")
+              : t("hero.dropImageHint")
+          }
+        />
+      </div>
 
       {/* Separator */}
       <div className="border-t border-beige my-5" />

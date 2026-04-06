@@ -21,7 +21,11 @@
     "tryExamples": "Essayez :",
     "chooseStyle": "Choisissez un style",
     "enhance": "Enrichir ma description",
-    "enhancing": "Enrichissement..."
+    "enhancing": "Enrichissement...",
+    "dropImage": "Glissez une photo de référence ici ou cliquez",
+    "dropImageHint": "JPG, PNG ou WebP — max 5 Mo",
+    "imageAttached": "Photo de référence ajoutée",
+    "imageAttachedHint": "Votre image sera transformée en peinture"
   },
   "howItWorks": {
     "title": "Comment ça marche",
@@ -73,6 +77,10 @@
     "descExample4": "Un paysage de lavande en Provence",
     "enhance": "Enrichir ma description",
     "enhancing": "Enrichissement...",
+    "dropImage": "Glissez une photo de référence ici ou cliquez",
+    "dropImageHint": "JPG, PNG ou WebP — max 5 Mo",
+    "imageAttached": "Photo de référence ajoutée",
+    "imageAttachedHint": "Votre image sera transformée en peinture",
     "continue": "Continuer",
     "back": "Retour",
     "styleTitle": "Choisissez un style artistique",
