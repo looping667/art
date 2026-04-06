@@ -39,11 +39,14 @@
   "gallery": {
     "title": "Déjà réalisés pour nos clients",
     "subtitle": "Chaque tableau est unique, peint à la main par nos artistes partenaires.",
-    "painting1": "Portrait contemporain — Marie L., Paris",
-    "painting2": "Bouquet d'iris — Jean-Pierre D., Lyon",
-    "painting3": "Canal vénitien — Sophie M., Bordeaux",
-    "painting4": "Nature morte aux citrons — Camille R., Nantes",
-    "painting5": "Portrait baroque revisité — Thomas B., Marseille"
+    "painting1": "Port normand au coucher du soleil — Style Monet",
+    "painting2": "Paysage de lavande en Provence — Style Hockney",
+    "painting3": "Jardin fleuri au printemps — Style Boucher",
+    "painting4": "Femme orientaliste dans le désert — Style libre",
+    "painting5": "Ruelle pavée de Montmartre sous la pluie — Style Rembrandt",
+    "painting6": "César et Cléopâtre — Style Hopper",
+    "painting7": "Le périphérique parisien à l'heure de pointe — Style Boucher",
+    "painting8": "Saint-Germain-des-Prés — Style Hockney"
   },
   "footer": {
     "tagline": "L'art sur mesure, à portée de mots.",

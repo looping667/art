@@ -39,11 +39,14 @@
   "gallery": {
     "title": "Already painted for our clients",
     "subtitle": "Each painting is unique, hand-painted by our partner artists.",
-    "painting1": "Contemporary portrait — Marie L., Paris",
-    "painting2": "Iris bouquet — Jean-Pierre D., Lyon",
-    "painting3": "Venetian canal — Sophie M., Bordeaux",
-    "painting4": "Still life with lemons — Camille R., Nantes",
-    "painting5": "Revisited baroque portrait — Thomas B., Marseille"
+    "painting1": "Norman harbor at sunset — Monet style",
+    "painting2": "Lavender landscape in Provence — Hockney style",
+    "painting3": "Spring flower garden — Boucher style",
+    "painting4": "Orientalist woman in the desert — Free style",
+    "painting5": "Cobblestone alley in Montmartre — Rembrandt style",
+    "painting6": "Caesar and Cleopatra — Hopper style",
+    "painting7": "Parisian ring road at rush hour — Boucher style",
+    "painting8": "Saint-Germain-des-Prés — Hockney style"
   },
   "footer": {
     "tagline": "Custom art, just a few words away.",
